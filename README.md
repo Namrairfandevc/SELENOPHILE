@@ -32,6 +32,6 @@ Since this is a lightweight, single-file application, no complex installation is
 
 ## 👤 Developer Information
 
-* **Developer**: Namra Irfan
+* **Developer**: Namra Irfan** *
   STUDENT OF SOFTWARE ENGINEERING
 
