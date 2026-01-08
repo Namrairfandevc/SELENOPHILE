@@ -36,5 +36,3 @@ Since this is a lightweight, single-file application, no complex installation is
 * **Registration Number**: 251301014
 * **Project**: ICT Lab Semester Project
 
----
-*Developed with ❤️ as a project for the ICT Lab.*
