@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selenophile - By Namra Irfan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent: #ff3366;
+            --accent-hover: #ff5580;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border: #333333;
+        }
+
+        body.theme-dark-red {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent: #ff3366;
+            --accent-hover: #ff5580;
+        }
+
+        body.theme-purple {
+            --bg-primary: #1a0033;
+            --bg-secondary: #2d0052;
+            --bg-tertiary: #400070;
+            --accent: #b366ff;
+            --accent-hover: #cc85ff;
+        }
+
+        body.theme-blue {
+            --bg-primary: #001a33;
+            --bg-secondary: #002d52;
+            --bg-tertiary: #004070;
+            --accent: #3399ff;
+            --accent-hover: #66b3ff;
+        }
+
+        body.theme-green {
+            --bg-primary: #0a1a0a;
+            --bg-secondary: #1a2d1a;
+            --bg-tertiary: #2a402a;
+            --accent: #33ff99;
+            --accent-hover: #66ffb3;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        /* Auth Pages */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .auth-box {
+            background: var(--bg-secondary);
+            padding: 40px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--border);
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-logo h1 {
+            font-size: 36px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .auth-logo p {
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .auth-links a {
+            color: var(--accent);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main App */
+        .app {
+            display: none;
+        }
+
+        .app.active {
+            display: block;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .owner-badge {
+            font-size: 9px;
+            padding: 3px 6px;
+            background: var(--accent);
+            color: white;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            position: relative;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            width: 250px;
+            height: calc(100vh - 60px);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--accent);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            margin-top: 60px;
+            padding: 20px;
+            min-height: calc(100vh - 60px);
+        }
+
+        .page {
+            display: none;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Stories */
+        .stories {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        .stories::-webkit-scrollbar {
+            display: none;
+        }
+
+        .story {
+            text-align: center;
+            cursor: pointer;
+            min-width: 80px;
+        }
+
+        .story-avatar {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(45deg, var(--accent), var(--accent-hover));
+            margin: 0 auto 8px;
+        }
+
+        .story-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--bg-primary);
+        }
+
+        .story-name {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Post */
+        .post {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .post-header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .post-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .post-username {
+            font-weight: 600;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .post-actions {
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s;
+        }
+
+        .action-btn:hover {
+            color: var(--accent);
+        }
+
+        .action-btn.liked {
+            color: var(--accent);
+        }
+
+        .post-likes {
+            padding: 0 15px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .post-caption {
+            padding: 0 15px 15px;
+            font-size: 14px;
+        }
+
+        .post-time {
+            padding: 0 15px 15px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .comments-section {
+            padding: 0 15px 15px;
+            border-top: 1px solid var(--border);
+            margin-top: 10px;
+            padding-top: 15px;
+        }
+
+        .comment {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .comment strong {
+            margin-right: 8px;
+        }
+
+        .comment-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .comment-input input {
+            flex: 1;
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-primary);
+        }
+
+        .comment-input button {
+            padding: 8px 16px;
+            background: var(--accent);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Profile Page */
+        .profile-header {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+        }
+
+        .profile-pic-wrapper {
+            position: relative;
+        }
+
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+        }
+
+        .edit-pic-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: var(--accent);
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+        }
+
+        .profile-info h2 {
+            margin-bottom: 15px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .bio {
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+
+        .bio-edit {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* Notifications */
+        .notification-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .notification-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Explore */
+        .explore-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+        }
+
+        .explore-item {
+            aspect-ratio: 1;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .explore-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .explore-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Messages */
+        .messages-container {
+            display: flex;
+            gap: 20px;
+            height: calc(100vh - 100px);
+        }
+
+        .messages-list {
+            width: 300px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            overflow-y: auto;
+        }
+
+        .message-item {
+            padding: 15px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .message-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .message-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .chat-area {
+            flex: 1;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px 15px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-primary);
+        }
+
+        /* Settings */
+        .settings-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .settings-section h3 {
+            margin-bottom: 15px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .toggle-switch.active {
+            background: var(--accent);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(26px);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            .nav-item span {
+                display: none;
+            }
+            .main-content {
+                margin-left: 60px;
+            }
+        }
+    </style>
+</head>
+<body class="theme-dark-red">
+    <!-- Login Page -->
+    <div id="loginPage" class="auth-container">
+        <div class="auth-box">
+            <div class="auth-logo">
+                <h1>SELENOPHILE</h1>
+                <p>By Namra Irfan</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn">Log In</button>
+            </form>
+            <div class="auth-links">
+                <a onclick="showResetPassword()">Forgot password?</a>
+                <p style="margin-top: 20px;">Don't have an account? <a onclick="showSignup()">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Page -->
+    <div id="signupPage" class="auth-container hidden">
+        <div class="auth-box">
+            <div class="auth-logo">
+                <h1>SELENOPHILE</h1>
+                <p>By Namra Irfan</p>
+            </div>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="signupUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <button type="submit" class="btn">Sign Up</button>
+            </form>
+            <div class="auth-links">
+                <p>Have an account? <a onclick="showLogin()">Log in</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Password Page -->
+    <div id="resetPage" class="auth-container hidden">
+        <div class="auth-box">
+            <div class="auth-logo">
+                <h1>SELENOPHILE</h1>
+                <p>Reset Password</p>
+            </div>
+            <form id="resetForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="resetUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="resetPassword" required>
+                </div>
+                <button type="submit" class="btn">Reset Password</button>
+            </form>
+            <div class="auth-links">
+                <p><a onclick="showLogin()">Back to login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="app">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="logo">SELENOPHILE</div>
+                <div class="owner-badge">BY NAMRA IRFAN</div>
+            </div>
+            <div class="header-icons">
+                <div class="icon-btn" onclick="showPage('notifications')">
+                    🔔
+                    <span class="notification-badge" id="notifBadge">0</span>
+                </div>
+                <div class="icon-btn" onclick="changeTheme()">🎨</div>
+                <div class="icon-btn" onclick="logout()">🚪</div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="nav-item active" onclick="showPage('feed')">
+                <span>🏠</span>
+                <span>Feed</span>
+            </div>
+            <div class="nav-item" onclick="showPage('explore')">
+                <span>🔍</span>
+                <span>Explore</span>
+            </div>
+            <div class="nav-item" onclick="showPage('messages')">
+                <span>💬</span>
+                <span>Messages</span>
+            </div>
+            <div class="nav-item" onclick="showPage('notifications')">
+                <span>🔔</span>
+                <span>Notifications</span>
+            </div>
+            <div class="nav-item" onclick="showPage('profile')">
+                <span>👤</span>
+                <span>Profile</span>
+            </div>
+            <div class="nav-item" onclick="showPage('settings')">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Feed Page -->
+            <div id="feedPage" class="page active">
+                <div class="stories" id="storiesContainer"></div>
+                <div id="feedPosts"></div>
+            </div>
+
+            <!-- Explore Page -->
+            <div id="explorePage" class="page">
+                <h2 style="margin-bottom: 20px;">Explore</h2>
+                <div class="explore-grid" id="exploreGrid"></div>
+            </div>
+
+            <!-- Messages Page -->
+            <div id="messagesPage" class="page">
+                <div class="messages-container">
+                    <div class="messages-list" id="messagesList"></div>
+                    <div class="chat-area">
+                        <div class="chat-header">
+                            <h3>Select a conversation</h3>
+                        </div>
+                        <div class="chat-messages"></div>
+                        <div class="chat-input">
+                            <input type="text" placeholder="Type a message...">
+                            <button class="btn">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Page -->
+            <div id="notificationsPage" class="page">
+                <h2 style="margin-bottom: 20px;">Notifications</h2>
+                <div id="notificationsList"></div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profilePage" class="page">
+                <div class="profile-header">
+                    <div class="profile-pic-wrapper">
+                        <img src="https://i.pravatar.cc/150?img=1" class="profile-pic" id="profilePic">
+                        <button class="edit-pic-btn" onclick="editProfilePic()">📷</button>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="profileUsername"></h2>
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <div class="stat-value" id="postsCount">0</div>
+                                <div class="stat-label">Posts</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="followersCount">0</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="followingCount">0</div>
+                                <div class="stat-label">Following</div>
+                            </div>
+                        </div>
+                        <div class="bio">
+                            <p id="bioText">Click edit to add your bio</p>
+                            <textarea class="bio-edit hidden" id="bioEdit"></textarea>
+                            <button class="btn" style="margin-top: 10px;" onclick="toggleBioEdit()">Edit Bio</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settingsPage" class="page">
+                <h2 style="margin-bottom: 20px;">Settings</h2>
+                <div class="settings-section">
+                    <h3>Account</h3>
+                    <div class="setting-item">
+                        <span>Private Account</span>
+                        <div class="toggle-switch" onclick="toggleSetting(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Activity Status</span>
+                        <div class="toggle-switch active" onclick="toggleSetting(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>Notifications</h3>
+                    <div class="setting-item">
+                        <span>Push Notifications</span>
+                        <div class="toggle-switch active" onclick="toggleSetting(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Email Notifications</span>
+                        <div class="toggle-switch" onclick="toggleSetting(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize data structures
+        let currentUser = null;
+        let users = JSON.parse(localStorage.getItem('selenophile_users')) || {};
+        let posts = JSON.parse(localStorage.getItem('selenophile_posts')) || [];
+        let notifications = JSON.parse(localStorage.getItem('selenophile_notifications')) || [];
+        let currentTheme = 0;
+        const themes = ['theme-dark-red', 'theme-purple', 'theme-blue', 'theme-green'];
+
+        // Auth functions
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (users[username] && users[username].password === password) {
+                currentUser = username;
+                localStorage.setItem('selenophile_currentUser', username);
+                showApp();
+            } else {
+                alert('Invalid credentials!');
+            }
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const username = document.getElementById('signupUsername').value;
+            const password = document.getElementById('signupPassword').value;
+            
+            if (users[username]) {
+                alert('Username already exists!');
+                return;
+            }
+            
+            users[username] = {
+                name,
+                password,
+                bio: '',
+                followers: [],
+                following: [],
+                profilePic: 'https://i.pravatar.cc/150?img=' + Math.floor(Math.random() * 70)
+            };
+            localStorage.setItem('selenophile_users', JSON.stringify(users));
+            alert('Account created! Please login.');
+            showLogin();
+        });
+
+        document.getElementById('resetForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('resetUsername').value;
+            const newPassword = document.getElementById('resetPassword').value;
+            
+            if (users[username]) {
+                users[username].password = newPassword;
+                localStorage.setItem('selenophile_users', JSON.stringify(users));
+                alert('Password reset successful!');
+                showLogin();
+            } else {
+                alert('User not found!');
+            }
+        });
+
+        function showLogin() {
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('resetPage').classList.add('hidden');
+        }
+
+        function showSignup() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.remove('hidden');
+            document.getElementById('resetPage').classList.add('hidden');
+        }
+
+        function showResetPassword() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('resetPage').classList.remove('hidden');
+        }
+
+        function showApp() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('resetPage').classList.add('hidden');
+            document.getElementById('app').classList.add('active');
+            initializeApp();
+        }
+
+        function logout() {
+            localStorage.removeItem('selenophile_currentUser');
+            currentUser = null;
+            document.getElementById('app').classList.remove('active');
+            showLogin();
+        }
+
+        function initializeApp() {
+            loadProfile();
+            loadFeed();
+            loadStories();
+            loadNotifications();
+            loadExplore();
+            loadMessages();
+            createSampleData();
+        }
+
+        function createSampleData() {
+            if (posts.length === 0) {
+                const sampleUsers = ['john_doe', 'jane_smith', 'mike_wilson', 'sarah_jones'];
+                sampleUsers.forEach(username => {
+                    if (!users[username]) {
+                        users[username] = {
+                            name: username.replace('_', ' '),
+                            password: 'password',
+                            bio: 'Love sharing moments 📸',
+                            followers: [currentUser],
+                            following: [],
+                            profilePic: 'https://i.pravatar.cc/150?img=' + Math.floor(Math.random() * 70)
+                        };
+                    }
+                    if (!users[currentUser].following.includes(username)) {
+                        users[currentUser].following.push(username);
+                    }
+                });
+
+                for (let i = 0; i < 10; i++) {
+                    posts.push({
+                        id: Date.now() + i,
+                        username: sampleUsers[Math.floor(Math.random() * sampleUsers.length)],
+                        image: `https://picsum.photos/600/400?random=${i}`,
+                        caption: 'Amazing moment captured! ✨',
+                        likes: [],
+                        comments: [],
+                        timestamp: Date.now() - (i * 3600000)
+                    });
+                }
+                localStorage.setItem('selenophile_users', JSON.stringify(users));
+                localStorage.setItem('selenophile_posts', JSON.stringify(posts));
+            }
+        }
+
+        function loadProfile() {
+            document.getElementById('profileUsername').textContent = currentUser;
+            document.getElementById('bioText').textContent = users[currentUser].bio || 'Click edit to add your bio';
+            document.getElementById('profilePic').src = users[currentUser].profilePic;
+            document.getElementById('followersCount').textContent = users[currentUser].followers.length;
+            document.getElementById('followingCount').textContent = users[currentUser].following.length;
+            
+            const userPosts = posts.filter(p => p.username === currentUser);
+            document.getElementById('postsCount').textContent = userPosts.length;
+        }
+
+        function loadFeed() {
+            const feedPosts = document.getElementById('feedPosts');
+            feedPosts.innerHTML = '';
+            
+            const followingPosts = posts.filter(p => users[currentUser].following.includes(p.username));
+            followingPosts.sort((a, b) => b.timestamp - a.timestamp);
+            
+            followingPosts.forEach(post => {
+                const postEl = createPostElement(post);
+                feedPosts.appendChild(postEl);
+            });
+        }
+
+        function createPostElement(post) {
+            const div = document.createElement('div');
+            div.className = 'post';
+            const isLiked = post.likes.includes(currentUser);
+            const timeAgo = getTimeAgo(post.timestamp);
+            
+            div.innerHTML = `
+                <div class="post-header">
+                    <div class="post-user">
+                        <img src="${users[post.username].profilePic}" class="post-avatar">
+                        <span class="post-username">${post.username}</span>
+                    </div>
+                    <span>⋯</span>
+                </div>
+                <img src="${post.image}" class="post-image">
+                <div class="post-actions">
+                    <button class="action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
+                        ${isLiked ? '❤️' : '🤍'} ${post.likes.length}
+                    </button>
+                    <button class="action-btn">💬 ${post.comments.length}</button>
+                    <button class="action-btn">📤</button>
+                </div>
+                <div class="post-likes">${post.likes.length} likes</div>
+                <div class="post-caption">
+                    <strong>${post.username}</strong> ${post.caption}
+                </div>
+                <div class="post-time">${timeAgo}</div>
+                <div class="comments-section">
+                    <div id="comments-${post.id}">
+                        ${post.comments.map(c => `
+                            <div class="comment">
+                                <strong>${c.username}</strong> ${c.text}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="comment-input">
+                        <input type="text" placeholder="Add a comment..." id="comment-input-${post.id}">
+                        <button onclick="addComment(${post.id})">Post</button>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        function toggleLike(postId) {
+            const post = posts.find(p => p.id === postId);
+            const index = post.likes.indexOf(currentUser);
+            
+            if (index > -1) {
+                post.likes.splice(index, 1);
+            } else {
+                post.likes.push(currentUser);
+                addNotification(post.username, `${currentUser} liked your post`);
+            }
+            
+            localStorage.setItem('selenophile_posts', JSON.stringify(posts));
+            loadFeed();
+        }
+
+        function addComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const text = input.value.trim();
+            
+            if (text) {
+                const post = posts.find(p => p.id === postId);
+                post.comments.push({ username: currentUser, text });
+                addNotification(post.username, `${currentUser} commented on your post`);
+                localStorage.setItem('selenophile_posts', JSON.stringify(posts));
+                input.value = '';
+                loadFeed();
+            }
+        }
+
+        function loadStories() {
+            const container = document.getElementById('storiesContainer');
+            container.innerHTML = '';
+            
+            users[currentUser].following.forEach(username => {
+                const story = document.createElement('div');
+                story.className = 'story';
+                story.innerHTML = `
+                    <div class="story-avatar">
+                        <img src="${users[username].profilePic}">
+                    </div>
+                    <div class="story-name">${username}</div>
+                `;
+                container.appendChild(story);
+            });
+        }
+
+        function loadNotifications() {
+            const list = document.getElementById('notificationsList');
+            const userNotifications = notifications.filter(n => n.recipient === currentUser);
+            
+            document.getElementById('notifBadge').textContent = userNotifications.length;
+            list.innerHTML = '';
+            
+            userNotifications.forEach(notif => {
+                const div = document.createElement('div');
+                div.className = 'notification-item';
+                div.innerHTML = `
+                    <img src="${users[notif.sender]?.profilePic || 'https://i.pravatar.cc/150?img=1'}" class="notification-avatar">
+                    <div class="notification-content">
+                        <div>${notif.message}</div>
+                        <div class="notification-time">${getTimeAgo(notif.timestamp)}</div>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function addNotification(recipient, message) {
+            if (recipient !== currentUser) {
+                notifications.push({
+                    recipient,
+                    sender: currentUser,
+                    message,
+                    timestamp: Date.now()
+                });
+                localStorage.setItem('selenophile_notifications', JSON.stringify(notifications));
+            }
+        }
+
+        function loadExplore() {
+            const grid = document.getElementById('exploreGrid');
+            grid.innerHTML = '';
+            
+            posts.forEach(post => {
+                const div = document.createElement('div');
+                div.className = 'explore-item';
+                div.innerHTML = `<img src="${post.image}">`;
+                grid.appendChild(div);
+            });
+        }
+
+        function loadMessages() {
+            const list = document.getElementById('messagesList');
+            list.innerHTML = '';
+            
+            users[currentUser].following.forEach(username => {
+                const div = document.createElement('div');
+                div.className = 'message-item';
+                div.innerHTML = `
+                    <img src="${users[username].profilePic}" class="message-avatar">
+                    <div>
+                        <strong>${username}</strong>
+                        <div style="font-size: 12px; color: var(--text-secondary);">Click to chat</div>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById(pageName + 'Page').classList.add('active');
+            event.target.closest('.nav-item').classList.add('active');
+            
+            changeTheme();
+        }
+
+        function changeTheme() {
+            document.body.classList.remove(themes[currentTheme]);
+            currentTheme = (currentTheme + 1) % themes.length;
+            document.body.classList.add(themes[currentTheme]);
+        }
+
+        function toggleBioEdit() {
+            const bioText = document.getElementById('bioText');
+            const bioEdit = document.getElementById('bioEdit');
+            
+            if (bioEdit.classList.contains('hidden')) {
+                bioEdit.value = users[currentUser].bio;
+                bioEdit.classList.remove('hidden');
+                bioText.classList.add('hidden');
+                event.target.textContent = 'Save Bio';
+            } else {
+                users[currentUser].bio = bioEdit.value;
+                localStorage.setItem('selenophile_users', JSON.stringify(users));
+                bioText.textContent = bioEdit.value || 'Click edit to add your bio';
+                bioEdit.classList.add('hidden');
+                bioText.classList.remove('hidden');
+                event.target.textContent = 'Edit Bio';
+            }
+        }
+
+        function editProfilePic() {
+            const newPic = prompt('Enter image URL:');
+            if (newPic) {
+                users[currentUser].profilePic = newPic;
+                localStorage.setItem('selenophile_users', JSON.stringify(users));
+                document.getElementById('profilePic').src = newPic;
+            }
+        }
+
+        function toggleSetting(element) {
+            element.classList.toggle('active');
+        }
+
+        function getTimeAgo(timestamp) {
+            const seconds = Math.floor((Date.now() - timestamp) / 1000);
+            if (seconds < 60) return 'Just now';
+            if (seconds < 3600) return Math.floor(seconds / 60) + ' minutes ago';
+            if (seconds < 86400) return Math.floor(seconds / 3600) + ' hours ago';
+            return Math.floor(seconds / 86400) + ' days ago';
+        }
+
+        // Check if user is logged in
+        const savedUser = localStorage.getItem('selenophile_currentUser');
+        if (savedUser && users[savedUser]) {
+            currentUser = savedUser;
+            showApp();
+        }
+    </script>
+</body>
+</html>
