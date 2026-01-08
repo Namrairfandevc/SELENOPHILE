@@ -33,6 +33,5 @@ Since this is a lightweight, single-file application, no complex installation is
 ## 👤 Developer Information
 
 * **Developer**: Namra Irfan
-* **Registration Number**: 251301014
-* **Project**: ICT Lab Semester Project
+  STUDENT OF SOFTWARE ENGINEERING
 
